@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Nhân Viên</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            color: #333;
+        }
+        h1 {
+            color: #001100;
+            text-align: center;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .button {
+            padding: 8px 12px;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .button.edit {
+            background-color: #FFD700;
+        }
+        .button.delete {
+            background-color: #FF4500;
+        }
+        .button.add,
+        .button.update {
+            background-color: #D3D3D3;
+            color: black;
+        }
+        .button.edit:hover {
+            background-color: #FFC107;
+            transform: translateY(-1px);
+        }
+        .button.delete:hover {
+            background-color: #FF6347;
+            transform: translateY(-1px);
+        }
+        .button.add:hover,
+        .button.update:hover {
+            background-color: #B0B0B0;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quản Lý Nhân Viên</h1>
+        
+        <form action="{{ url_for('them_nhan_vien') }}" method="post">
+            <h3>Thêm Nhân Viên Mới</h3>
+            <input type="number" name="id" placeholder="ID Nhân Viên" required>
+            <input type="text" name="ten" placeholder="Tên Nhân Viên" required>
+            <input type="number" name="tuoi" placeholder="Tuổi" required>
+            <input type="text" name="chuc_vu" placeholder="Chức Vụ" required>
+            <button type="submit" class="button add">Thêm Nhân Viên</button>
+        </form>
+
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Tên</th>
+                <th>Tuổi</th>
+                <th>Chức Vụ</th>
+                <th>Hành Động</th>
+            </tr>
+            {% for nv in nhan_vien %}
+            <tr>
+                <td>{{ nv[0] }}</td>
+                <td>{{ nv[1] }}</td>
+                <td>{{ nv[2] }}</td>
+                <td>{{ nv[3] }}</td>
+                <td>
+                    <form action="{{ url_for('xoa_nhan_vien', id=nv[0]) }}" method="post" style="display:inline;">
+                        <button type="submit" class="button delete" onclick="return confirm('Bạn có chắc muốn xóa nhân viên này?');">Xóa</button>
+                    </form>
+                    <a href="{{ url_for('chinh_sua_nhan_vien', id=nv[0]) }}" class="button edit">Chỉnh Sửa</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        {% if nhan_vien_chinh_sua %}
+        <h3>Chỉnh Sửa Nhân Viên</h3>
+        <form action="{{ url_for('chinh_sua_nhan_vien', id=nhan_vien_chinh_sua[0]) }}" method="post">
+            <input type="text" name="ten" value="{{ nhan_vien_chinh_sua[1] }}" required>
+            <input type="number" name="tuoi" value="{{ nhan_vien_chinh_sua[2] }}" required>
+            <input type="text" name="chuc_vu" value="{{ nhan_vien_chinh_sua[3] }}" required>
+            <button type="submit" class="button update">Cập Nhật</button>
+        </form>
+        {% endif %}
+    </div>
+</body>
+</html>
